@@ -27,7 +27,7 @@ func main() {
 
 		staticFiles, _ := fs.Sub(FS, "app/dist")
 
-		router.GET("/api/v1/texts", TextsController)
+		router.POST("/api/v1/texts", TextsController)
 		router.StaticFS("/static", http.FS(staticFiles))
 		// Guard
 		router.NoRoute(func(c *gin.Context) {
@@ -75,19 +75,19 @@ func TextsController(c *gin.Context) {
 	if err := c.ShouldBindJSON(&json); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 	} else {
-		// 1 获取go执行文件所在目录
+		// 1 获取 transgo.exe 所在目录
 		exe, err := os.Executable()
 		if err != nil {
 			log.Fatal(err)
 		}
-		dir := filepath.Dir(exe)
+		dir := filepath.Dir(exe) // 获取程序所在目录
 		if err != nil {
 			log.Fatal(err)
 		}
-		filename := uuid.New().String()
+		filename := uuid.New().String() // 随机生成文件名
 		// 2 在exe文件所在目录创建uploads目录
-		uploads := filepath.Join(dir, "uploads")
-		err = os.MkdirAll(uploads, os.ModePerm)
+		uploads := filepath.Join(dir, "uploads") // 拼接uploads路径
+		err = os.MkdirAll(uploads, os.ModePerm)  // 注意文件权限
 		if err != nil {
 			log.Fatal(err)
 		}

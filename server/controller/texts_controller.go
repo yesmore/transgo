@@ -23,7 +23,7 @@ func TextsController(c *gin.Context) {
 	if err := c.ShouldBindJSON(&json); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 	} else {
-		// 1 获取go执行文件所在目录
+		// 1 获取 transgo.exe所在目录
 		exe, err := os.Executable()
 		if err != nil {
 			log.Fatal(err)
