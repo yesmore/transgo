@@ -1,0 +1,8 @@
+.vscode
+.idea
+.devcontainer
+
+dist
+node_modules
+
+transgo.code-workspace
