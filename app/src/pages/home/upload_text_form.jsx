@@ -13,6 +13,7 @@ import { Center } from "../../components/center";
 export const UploadTextForm = () => {
   const context = useContext(AppContext);
   const [text, setText] = useState("");
+  
   const onSubmit = async (e) => {
     e.preventDefault();
     showUploadingDialog();
@@ -21,6 +22,7 @@ export const UploadTextForm = () => {
       context, content: (addr) => addr && `http://${addr}:23333/static/downloads?type=text&url=http://${addr + ":23333" + encodeURIComponent(url)}`
     });
   };
+
   return (
     <Form className="uploadForm" onSubmit={onSubmit}>
       <div className="row">

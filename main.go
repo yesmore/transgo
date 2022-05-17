@@ -14,6 +14,7 @@ import (
 	"path/filepath"
 	"strings"
 	config "transgo/server/config"
+	browser "transgo/server/constant"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -60,7 +61,7 @@ func main() {
 		router.Run(":8080")
 	}()
 
-	browserPath := "D:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
+	browserPath := browser.Chrome
 	cmd := exec.Command(browserPath, "--app=http://127.0.0.1:8080/static")
 	cmd.Start()
 
@@ -69,11 +70,13 @@ func main() {
 	signal.Notify(chSignal, os.Interrupt)
 
 	// 阻塞等待中断信号
-	select {
-	case <-chSignal:
-		println("shutdown spwan...")
-		cmd.Process.Kill()
-	}
+	// select {
+	// case
+
+	// }
+	<-chSignal
+	println("Shutdown App...")
+	cmd.Process.Kill()
 }
 
 /*
@@ -159,6 +162,8 @@ func QrcodesController(c *gin.Context) {
 		if err != nil {
 			log.Fatal(err)
 		}
+		// content="http://ip:23333/static/downloads?type=text&url=http://ip:23333/uploads/filename.txt"
+		// /api/v1/qrcodes?content=http://ip:23333/static/downloads?type=text&url=http://ip:23333/uploads/filename.txt
 		c.Data(http.StatusOK, "image/png", png) // 展示二维码图片
 	} else {
 		c.Status(http.StatusPreconditionRequired)

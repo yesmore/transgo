@@ -2,10 +2,6 @@ module transgo
 
 go 1.17
 
-replace github.com/zserge/lorca => D:\repos\lorca
-
-require github.com/zserge/lorca v0.1.10
-
 require (
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-playground/locales v0.13.0 // indirect
