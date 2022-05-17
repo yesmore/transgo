@@ -15,7 +15,7 @@ import (
 //go:embed app/dist/*
 var FS embed.FS
 
-func Run(port string) {
+func RunServer(port string) {
 	gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
 
