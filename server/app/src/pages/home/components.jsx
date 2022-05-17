@@ -63,11 +63,15 @@ const UploadSuccessDialog = ({ content, onClose }) => {
   const [address, setAddress] = useState(localStorage.getItem("address") || "");
   const context = useContext(AppContext);
   const addressesRef = context?.addressesRef ?? null
+
+  // 监听选择 ip 重新生成
   const onChange = (e) => {
     setAddress(e.target.value);
     localStorage.setItem("address", e.target.value);
   };
+
   content = typeof content === "string" ? content : content(address)
+
   return (
     <Pop>
       <H2>上传成功</H2>
@@ -105,18 +109,21 @@ const UploadSuccessDialog = ({ content, onClose }) => {
     </Pop>
   );
 };
+
 export const showUploadTextSuccessDialog = ({ context, content }) => {
   const close = createDialog(
     <UploadSuccessDialog content={content} onClose={() => close()} />,
     { context }
   );
 };
+
 export const showUploadFileSuccessDialog = ({ context, content }) => {
   const close = createDialog(
     <UploadSuccessDialog content={content} onClose={() => close()} />,
     { context }
   );
 };
+
 export const showUploadFailDialog = () => {
   return createDialog(
     <Pop>
@@ -125,9 +132,11 @@ export const showUploadFailDialog = () => {
     </Pop>
   );
 };
+
 export const showUploadingDialog = () => {
   return createDialog(<Loading>正在上传</Loading>);
 };
+
 const Pop = styled.div`
   padding: 16px;
 `;
@@ -138,14 +147,17 @@ const notifyPc = (response, type) => {
   })
   return response
 }
+
 export const uploadText = (text) => {
   return http.post("/api/v1/txt", {
     raw: text
   }).then(r => notifyPc(r, 'text'))
 }
+
 export const uploadFile = (blob) => {
   const formData = new FormData();
   formData.append("raw", blob);
+  
   return http({
     method: "post",
     url: "/api/v1/files",

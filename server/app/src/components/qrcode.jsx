@@ -17,6 +17,7 @@ export const Qrcode = ({ content }) => {
   useEffect(() => {
     if (!content) return;
 
+    // content="http://ip:23333/static/downloads?type=text&url=http://ip:23333/uploads/filename.txt"
     const url = `/api/v1/qrcodes?content=${content}`;
     setLoading(true);
     prefetch(url)

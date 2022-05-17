@@ -11,20 +11,25 @@ import { AppContext } from "../../shared/app_context";
 export const UploadFileForm = () => {
   const context = useContext(AppContext);
   const [boxClass, setBoxClass] = useState("default");
+
   const onDragOver = (e) => {
     e.preventDefault();
     setBoxClass("dragging");
   };
+
   const onDragLeave = (e) => {
     setBoxClass("default");
   };
+
   const onDrop = async (e) => {
     e.preventDefault();
     const file = e.dataTransfer?.items?.[0]?.getAsFile();
     if (!file) return;
     const type = file.type || "unknown";
     showUploadingDialog();
+    // 上传文件
     const { data: { url } } = await uploadFile(file);
+
     showUploadFileSuccessDialog({
       context,
       content: (addr) =>
@@ -34,6 +39,7 @@ export const UploadFileForm = () => {
         )}`,
     });
   };
+
   const onChange = async (e) => {
     const file = e.target?.files?.[0];
     if (!file) return;
@@ -49,6 +55,7 @@ export const UploadFileForm = () => {
         )}`,
     });
   };
+
   return (
     <Form className="uploadForm">
       <div className="row">
@@ -65,6 +72,7 @@ export const UploadFileForm = () => {
     </Form>
   );
 };
+
 const Box = styled.div`
   &.dragging {
     border-color: ${({ theme }) => theme.highlightColor};
