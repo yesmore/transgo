@@ -1,4 +1,4 @@
-const url = `ws://${window.location.hostname}:27149/ws`;
+const url = `ws://${window.location.hostname}:23333/ws`;
 const wsClient = new WebSocket(url);
 
 class WsClient {

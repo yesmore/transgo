@@ -18,7 +18,7 @@ export const UploadTextForm = () => {
     showUploadingDialog();
     const { data: { url } } = await uploadText(text)
     showUploadTextSuccessDialog({
-      context, content: (addr) => addr && `http://${addr}:27149/static/downloads?type=text&url=http://${addr + ":27149" + encodeURIComponent(url)}`
+      context, content: (addr) => addr && `http://${addr}:23333/static/downloads?type=text&url=http://${addr + ":23333" + encodeURIComponent(url)}`
     });
   };
   return (

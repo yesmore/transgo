@@ -74,7 +74,7 @@ const UploadSuccessDialog = ({ content, onClose }) => {
       {addressesRef.current ?
         <div>
           <P>
-            请 Windows 用户在防火墙入站规则中开通 27149 端口（<a href="https://jingyan.baidu.com/article/09ea3ede7311dec0afde3977.html" target="_blank" rel="noreferrer">教程</a>）
+            请 Windows 用户在防火墙入站规则中开通 23333 端口（<a href="https://jingyan.baidu.com/article/09ea3ede7311dec0afde3977.html" target="_blank" rel="noreferrer">教程</a>）
           </P>
           <P>
             <Label>
@@ -126,7 +126,7 @@ export const showUploadFailDialog = () => {
   );
 };
 export const showUploadingDialog = () => {
-  return createDialog(<Loading>上传中</Loading>);
+  return createDialog(<Loading>正在上传</Loading>);
 };
 const Pop = styled.div`
   padding: 16px;
@@ -139,7 +139,7 @@ const notifyPc = (response, type) => {
   return response
 }
 export const uploadText = (text) => {
-  return http.post("/api/v1/texts", {
+  return http.post("/api/v1/txt", {
     raw: text
   }).then(r => notifyPc(r, 'text'))
 }

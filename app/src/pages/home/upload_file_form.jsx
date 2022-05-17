@@ -29,8 +29,8 @@ export const UploadFileForm = () => {
       context,
       content: (addr) =>
         addr &&
-        `http://${addr}:27149/static/downloads?type=${type}&url=${encodeURIComponent(
-          `http://${addr}:27149${url}`
+        `http://${addr}:23333/static/downloads?type=${type}&url=${encodeURIComponent(
+          `http://${addr}:23333${url}`
         )}`,
     });
   };
@@ -44,8 +44,8 @@ export const UploadFileForm = () => {
       context,
       content: (addr) =>
         addr &&
-        `http://${addr}:27149/static/downloads?type=${type}&url=${encodeURIComponent(
-          `http://${addr}:27149${url}`
+        `http://${addr}:23333/static/downloads?type=${type}&url=${encodeURIComponent(
+          `http://${addr}:23333${url}`
         )}`,
     });
   };

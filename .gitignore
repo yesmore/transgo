@@ -6,3 +6,10 @@ dist
 node_modules
 
 transgo.code-workspace
+
+/uploads
+/main
+/*.exe
+*.log
+/build
+*.syso

@@ -5,6 +5,7 @@ import (
 	"io/fs"
 	"io/ioutil"
 	"log"
+	"net"
 	"net/http"
 	"os"
 	"os/exec"
@@ -12,6 +13,7 @@ import (
 	"path"
 	"path/filepath"
 	"strings"
+	config "transgo/server/config"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -26,10 +28,14 @@ func main() {
 		router := gin.Default()
 
 		staticFiles, _ := fs.Sub(FS, "app/dist")
+		router.StaticFS("/static", http.FS(staticFiles)) // 静态文件
 
-		router.POST("/api/v1/texts", TextsController)
-		router.StaticFS("/static", http.FS(staticFiles))
-		// Guard
+		// Routers
+		router.GET("/api/v1/addresses", AddressesController)
+		router.POST("/api/v1/txt", TextsController)
+		router.GET("/api/v1/upload/:path", UploadsController)
+
+		// Render
 		router.NoRoute(func(c *gin.Context) {
 			path := c.Request.URL.Path
 			if strings.HasPrefix(path, "/static/") {
@@ -67,6 +73,9 @@ func main() {
 	}
 }
 
+/*
+	文本上传
+*/
 func TextsController(c *gin.Context) {
 	var json struct {
 		Raw string
@@ -100,5 +109,40 @@ func TextsController(c *gin.Context) {
 		// 4 返回该文件的下载路径
 		c.JSON(http.StatusOK, gin.H{"url": "/" + fullpath})
 	}
+}
 
+/*
+  获取本机IP地址
+*/
+func AddressesController(c *gin.Context) {
+	addrs, _ := net.InterfaceAddrs() // 获取所有网卡的地址
+	var result []string
+	// 遍历所有的地址
+	for _, address := range addrs {
+		// check the address type and if it is not a loopback the display it
+		// address.(*net.IPNet) 表示 断言 address 为 net.IPNet 类型
+		if ipnet, ok := address.(*net.IPNet); ok && !ipnet.IP.IsLoopback() {
+			if ipnet.IP.To4() != nil {
+				result = append(result, ipnet.IP.String())
+			}
+		}
+	}
+	c.JSON(http.StatusOK, gin.H{"addresses": result})
+}
+
+/*
+	文件上传
+	生成文件下载链接
+*/
+func UploadsController(c *gin.Context) {
+	if path := c.Param("path"); path != "" {
+		target := filepath.Join(config.UploadsDir, path) // 拼接上传文件路径（uploads/）
+		c.Header("Content-Description", "File Transfer")
+		c.Header("Content-Transfer-Encoding", "binary") // 转二进制文件
+		c.Header("Content-Disposition", "attachment; filename="+path)
+		c.Header("Content-Type", "application/octet-stream") // 二进制流 支持任意文件格式
+		c.File(target)                                       // 向前端发送文件
+	} else {
+		c.Status(http.StatusNotFound)
+	}
 }
