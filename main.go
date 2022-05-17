@@ -17,6 +17,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+	"github.com/skip2/go-qrcode"
 )
 
 //go:embed app/dist/*
@@ -27,13 +28,15 @@ func main() {
 		gin.SetMode(gin.ReleaseMode)
 		router := gin.Default()
 
+		// 静态文件
 		staticFiles, _ := fs.Sub(FS, "app/dist")
-		router.StaticFS("/static", http.FS(staticFiles)) // 静态文件
+		router.StaticFS("/static", http.FS(staticFiles))
 
 		// Routers
 		router.GET("/api/v1/addresses", AddressesController)
 		router.POST("/api/v1/txt", TextsController)
 		router.GET("/api/v1/upload/:path", UploadsController)
+		router.GET("/api/v1/qrcodes", QrcodesController)
 
 		// Render
 		router.NoRoute(func(c *gin.Context) {
@@ -144,5 +147,20 @@ func UploadsController(c *gin.Context) {
 		c.File(target)                                       // 向前端发送文件
 	} else {
 		c.Status(http.StatusNotFound)
+	}
+}
+
+/*
+	生成二维码
+*/
+func QrcodesController(c *gin.Context) {
+	if content := c.Query("content"); content != "" {
+		png, err := qrcode.Encode(content, qrcode.Medium, 256)
+		if err != nil {
+			log.Fatal(err)
+		}
+		c.Data(http.StatusOK, "image/png", png) // 展示二维码图片
+	} else {
+		c.Status(http.StatusPreconditionRequired)
 	}
 }
